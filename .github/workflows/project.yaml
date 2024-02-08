@@ -1,0 +1,30 @@
+name: Bootstrap
+on  :
+  workflow_dispatch:
+env:
+  OVH_ENDPOINT: ${{ vars.OVH_ENDPOINT }}
+  OVH_APPLICATION_KEY: ${{ vars.OVH_APPLICATION_KEY }}
+  OVH_APPLICATION_SECRET: ${{ secrets.OVH_APPLICATION_SECRET }}
+  OVH_CONSUMER_KEY: ${{ secrets.OVH_CONSUMER_KEY }}
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+      - uses: actions/cache@v3
+        with:
+          key : terraform
+          path: |
+            ./.terraform
+            ./.terraform.lock.hcl
+      - run: terraform init
+      - run: terraform apply -auto-approve -compact-warnings
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfstate
+          path: terraform.tfstate
+      - run: sleep 300
+      - run: terraform apply -auto-approve -compact-warnings -destroy
