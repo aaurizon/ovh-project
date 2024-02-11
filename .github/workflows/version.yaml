@@ -8,12 +8,13 @@ env:
   OVH_CONSUMER_KEY: ${{ secrets.OVH_CONSUMER_KEY }}
 jobs:
   terraform:
-    runs-on: ubuntu-latest
+   #runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_wrapper: false
+     #- uses: hashicorp/setup-terraform@v3
+     #  with:
+     #    terraform_wrapper: false
       - uses: actions/cache@v3
         with:
           key : terraform
